@@ -54,13 +54,13 @@ Before you can use AIDesk, ensure you have the following prerequisites installed
 1. Clone this repository to your local machine:
 
     ```bash
-    git clone https://github.com/Desai-Vedant/AI-Desktop-Assistant.git
+    git clone https://github.com/Desai-Vedant/AIDesk.git
     ```
 
 2. Navigate to the project directory:
 
     ```bash
-    cd AI-Desktop-Assistant
+    cd AIDesk
     ```
 
 3. Install the required Python libraries from the `requirements.txt` file:
