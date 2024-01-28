@@ -1,5 +1,5 @@
 pyttsx3==2.90  # For text-to-speech functionality
-speech_recognition==3.8.1  # For speech recognition
+SpeechRecognition==3.8.1  # For speech recognition
 pyautogui==0.9.54  # For taking screenshots
 requests==2.26.0  # For making HTTP requests
 openai==0.27.0  # For accessing the GPT-3.5 Turbo model
