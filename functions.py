@@ -15,7 +15,7 @@ class Assistant:
     #Initializing Owner Name, Assistant Name, API Keys
     def __init__(self):
         openai.api_key = '--YOUR OPENAI API KEY--'
-        genai.configure(api_key='--YOUR GEMINI API KEY')
+        genai.configure(api_key='--YOUR GEMINI API KEY--')
         self.model = genai.GenerativeModel('gemini-pro')
         self.chat = self.model.start_chat()
         self.owner_name = "--YOUR NAME--"
