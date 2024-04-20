@@ -1,5 +1,6 @@
 #Import required Libraries
 import speech_recognition as sr
+import google.generativeai as genai
 import webbrowser
 import pyttsx3
 import pyautogui
@@ -14,6 +15,9 @@ class Assistant:
     #Initializing Owner Name, Assistant Name, API Keys
     def __init__(self):
         openai.api_key = '--YOUR OPENAI API KEY--'
+        genai.configure(api_key='--YOUR GEMINI API KEY')
+        self.model = genai.GenerativeModel('gemini-pro')
+        self.chat = self.model.start_chat()
         self.owner_name = "--YOUR NAME--"
         self.assistant_name = "AIDesk"
         self.weather_api_key = "--YOUR WEATHER API KEY--"
@@ -156,7 +160,10 @@ class Assistant:
             self.speak(response)
 
         else:
-            response = self.generate_ai_response(input_string)
+            try:
+                response = self.generate_gemini_response(input_string)
+            except:
+                response = self.generate_ai_response(input_string)
             self.print_response(response)
             self.speak(response)
 
@@ -182,6 +189,16 @@ class Assistant:
             output = response.choices[0].text.strip()
             self.copy_to_clipboard(output)
             return output
+        except:
+            self.print_response("Error occurred while generating response")
+            return False
+
+    #Function to get AI Response from Gemini AI Google
+    def generate_gemini_response(self, command):
+        try:
+            response = self.chat.send_message(command)
+            self.copy_to_clipboard(response.text)
+            return response.text.replace('*','')
         except:
             self.print_response("Error occurred while generating response")
             return False
