@@ -5,3 +5,4 @@ requests==2.26.0  # For making HTTP requests
 openai==0.27.0  # For accessing the GPT-3.5 Turbo model
 pyqt5==5.15.4  # For the graphical user interface
 pyperclip==1.8.2  # For copying text to the clipboard
+google-generativeai==0.5.2 # For using Google Gemini API
