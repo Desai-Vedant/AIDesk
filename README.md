@@ -24,7 +24,7 @@ AIDesk is a versatile desktop assistant that leverages various libraries and tec
 - Taking screenshots
 - Providing date and time information
 - Displaying temperature information for cities
-- Generating AI-based responses using OpenAI's GPT-3.5 Turbo model
+- Generating AI-based responses using OpenAI's GPT-3.5 Turbo model or Using Gemini API of Google
 
 The assistant provides a graphical user interface (GUI) for users to interact with. The GUI offers a user-friendly experience.
 
@@ -36,7 +36,7 @@ The assistant provides a graphical user interface (GUI) for users to interact wi
 - Screenshot capture
 - Date and time information
 - Weather information for cities
-- AI-based responses using GPT-3.5 Turbo
+- AI-based responses using GPT-3.5 Turbo and Google's Gemini API
 - User-friendly GUI
 
 ## Prerequisites
@@ -46,7 +46,7 @@ Before you can use AIDesk, ensure you have the following prerequisites installed
 - Python 3.6 or higher
 - Required Python libraries (specified in the `requirements.txt` file)
 - PyQt5 for the graphical user interface (install using `pip install PyQt5`)
-- OpenAI API key for AI-based responses (replace the key in the code)
+- OpenAI or Gemini API key for AI-based responses (replace the key in the code)
 - WeatherAPI API key for weather information (replace the key in the code)
 
 ## Installation
@@ -81,7 +81,18 @@ Before you can use AIDesk, ensure you have the following prerequisites installed
 
     - Replace `'--YOUR OPENAI API KEY--'` with your API key.
 
-2. **Owner Name**: Customize the owner's name in the code to your preferred name. This is the name the assistant will use when interacting with you.
+2. **Gemini API Key**: Replace the Gemini API key in the code with your own API key. Obtain your API key by signing up for Gemini API key.
+
+    - Locate the following line in `functions.py`:
+
+        ```python
+        genai.configure(api_key='--YOUR API KEY--')
+        ```
+
+    - Replace `'--YOUR API KEY--'` with your API key.
+      
+
+3. **Owner Name**: Customize the owner's name in the code to your preferred name. This is the name the assistant will use when interacting with you.
 
     - Locate the following line in `functions.py`:
 
@@ -91,7 +102,7 @@ Before you can use AIDesk, ensure you have the following prerequisites installed
 
     - Replace `"--YOUR NAME--"` with your preferred name.
 
-3. **Assistant Name**: Customize the assistant's name in the code to your preferred name. This is the name by which you'll address the assistant.
+4. **Assistant Name**: Customize the assistant's name in the code to your preferred name. This is the name by which you'll address the assistant.
 
     - Locate the following line in `functions.py`:
 
@@ -101,7 +112,7 @@ Before you can use AIDesk, ensure you have the following prerequisites installed
 
     - Replace `"AIDesk"` with your preferred assistant name.
 
-4. **WeatherAPI API Key**: If you plan to use the weather information feature, replace the WeatherAPI API key in the code with your own API key.
+5. **WeatherAPI API Key**: If you plan to use the weather information feature, replace the WeatherAPI API key in the code with your own API key.
 
     - Locate the following line in `functions.py`:
 
