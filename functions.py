@@ -1,26 +1,69 @@
 #Import required Libraries
 import speech_recognition as sr
-import google.generativeai as genai
+from google import generativeai as genai
 import webbrowser
 import pyttsx3
 import pyautogui
 import datetime
 import requests
 import json
-import openai
 import pyperclip
+import os
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
 
 #Assistant Class to contain all the Functions
 class Assistant:
     #Initializing Owner Name, Assistant Name, API Keys
     def __init__(self):
-        openai.api_key = '--YOUR OPENAI API KEY--'
-        genai.configure(api_key='--YOUR GEMINI API KEY--')
-        self.model = genai.GenerativeModel('gemini-pro')
-        self.chat = self.model.start_chat()
-        self.owner_name = "--YOUR NAME--"
-        self.assistant_name = "AIDesk"
-        self.weather_api_key = "--YOUR WEATHER API KEY--"
+        # Initialize API keys from environment variables
+        self.gemini_api_key = os.getenv('GEMINI_API_KEY')
+        self.weather_api_key = os.getenv('WEATHER_API_KEY')
+
+        # Initialize Gemini AI model
+        if self.gemini_api_key:
+            from google import genai
+            from google.genai import types
+            
+            # Initialize the Gemini client
+            self.client = genai.Client(api_key=self.gemini_api_key)
+
+            # Configure generation config
+            self.generation_config = types.GenerateContentConfig(
+                temperature=0.7,
+                top_p=0.8,
+                top_k=40,
+                candidate_count=1,
+                max_output_tokens=2048,
+                stop_sequences=[],
+                # Safety settings with new format
+                safety_settings=[
+                    types.SafetySetting(
+                        category='HARM_CATEGORY_HARASSMENT',
+                        threshold='BLOCK_ONLY_HIGH'
+                    ),
+                    types.SafetySetting(
+                        category='HARM_CATEGORY_HATE_SPEECH',
+                        threshold='BLOCK_ONLY_HIGH'
+                    ),
+                    types.SafetySetting(
+                        category='HARM_CATEGORY_SEXUALLY_EXPLICIT',
+                        threshold='BLOCK_ONLY_HIGH'
+                    ),
+                    types.SafetySetting(
+                        category='HARM_CATEGORY_DANGEROUS_CONTENT',
+                        threshold='BLOCK_ONLY_HIGH'
+                    )
+                ]
+            )
+
+        # Set user configuration
+        self.owner_name = os.getenv('OWNER_NAME', "--YOUR NAME--")
+        self.assistant_name = os.getenv('ASSISTANT_NAME', "AIDesk")
+        
+        # Initialize speech components
         self.speech_recognizer = sr.Recognizer()
         self.listener = sr.Microphone()
         self.engine = self.initialize_engine()
@@ -160,10 +203,11 @@ class Assistant:
             self.speak(response)
 
         else:
-            try:
+            # Use streaming for longer queries that might need detailed responses
+            if len(input_string.split()) > 10:
+                response = self.generate_streaming_response(input_string)
+            else:
                 response = self.generate_gemini_response(input_string)
-            except:
-                response = self.generate_ai_response(input_string)
             self.print_response(response)
             self.speak(response)
 
@@ -173,35 +217,84 @@ class Assistant:
         user_input = self.listen()
         self.decide_action(user_input)
 
-    #Function to Generate AI based responce from Chat GPT
-    def generate_ai_response(self, command):
+    #Functions to get AI Response from Gemini AI Google
+    def generate_streaming_response(self, command):
+        """Generate AI response using Gemini API with streaming"""
+        if not self.gemini_api_key:
+            self.print_response("No AI API keys configured!")
+            return "I apologize, but I don't have access to AI services at the moment. Please check your API configuration."
+        
         try:
-            # Send a request to the GPT-3.5 Turbo model
-            response = openai.Completion.create(
-                engine='text-davinci-003',
-                prompt=command,
-                max_tokens=50,
-                temperature=0.7,
-                n=1,
-                stop=None,
+            # Use streaming for longer responses
+            response_stream = self.client.models.generate_content_stream(
+                model='gemma-3-27b-it',
+                contents=[{
+                    "role": "user",
+                    "parts": [{"text": command}]
+                }],
+                config=self.generation_config
             )
-            # Retrieve the generated response
-            output = response.choices[0].text.strip()
-            self.copy_to_clipboard(output)
-            return output
-        except:
-            self.print_response("Error occurred while generating response")
-            return False
 
-    #Function to get AI Response from Gemini AI Google
+            # Collect the streamed response
+            full_response = []
+            for chunk in response_stream:
+                if chunk.text:
+                    full_response.append(chunk.text)
+                    # Print each chunk as it arrives
+                    print(chunk.text, end='', flush=True)
+
+            complete_response = ''.join(full_response)
+            if complete_response:
+                self.copy_to_clipboard(complete_response)
+                return complete_response.replace('*', '')
+
+            return "Sorry, I couldn't generate a response at this time."
+
+        except Exception as e:
+            error_msg = str(e)
+            if "safety" in error_msg.lower():
+                return "I apologize, but I cannot provide a response to that query due to safety considerations."
+            elif "rate" in error_msg.lower():
+                return "I'm receiving too many requests right now. Please try again in a moment."
+            else:
+                self.print_response(f"Error with Gemini streaming: {error_msg}")
+                return "I encountered an error while processing your request. Please try again later."
     def generate_gemini_response(self, command):
+        """Generate AI response using Gemini API"""
+        if not self.gemini_api_key:
+            self.print_response("No AI API keys configured!")
+            return "I apologize, but I don't have access to AI services at the moment. Please check your API configuration."
+        
         try:
-            response = self.chat.send_message(command)
-            self.copy_to_clipboard(response.text)
-            return response.text.replace('*','')
-        except:
-            self.print_response("Error occurred while generating response")
-            return False
+            # Create response using the configured client
+            response = self.client.models.generate_content(
+                model='gemma-3-27b-it',
+                contents=[{
+                    "role": "user",
+                    "parts": [{"text": command}]
+                }],
+                config=self.generation_config
+            )
+
+            if response.candidates:
+                answer = response.text
+                # Copy response to clipboard
+                if answer:
+                    self.copy_to_clipboard(answer)
+                    return answer.replace('*', '')
+
+            return "Sorry, I couldn't generate a response at this time."
+
+        except Exception as e:
+            error_msg = str(e)
+            # Check for specific error types
+            if "safety" in error_msg.lower():
+                return "I apologize, but I cannot provide a response to that query due to safety considerations."
+            elif "rate" in error_msg.lower():
+                return "I'm receiving too many requests right now. Please try again in a moment."
+            else:
+                self.print_response(f"Error with Gemini: {error_msg}")
+                return "I encountered an error while processing your request. Please try again later."
 
     #Function to get today's Date
     def get_date(self):
@@ -237,11 +330,13 @@ class Assistant:
             timestamp = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
             screenshot = pyautogui.screenshot()
             file_name = f"screenshot_{timestamp}.png"
-            filepath = f"C:/Users/Admin/Pictures/Screenshots/{file_name}"
+            screenshot_path = os.getenv('SCREENSHOT_PATH', "C:/Users/Admin/Pictures/Screenshots/")
+            filepath = os.path.join(screenshot_path, file_name)
+            os.makedirs(os.path.dirname(filepath), exist_ok=True)
             screenshot.save(filepath)
             return True
-        except:
-            self.print_response("Error taking a screenshot!")
+        except Exception as e:
+            self.print_response(f"Error taking a screenshot: {str(e)}")
             return False
 
     #Function to get current time
@@ -304,7 +399,7 @@ class Assistant:
     #Function to get tempreature of a city
     def tell_temp(self, city):
         try:
-            url = f'https://api.weatherapi.com/v1/current.json?key={self.weather_api_key}={city}'
+            url = f'https://api.weatherapi.com/v1/current.json?key={self.weather_api_key}&q={city}'
             r = requests.get(url)
             r.raise_for_status()  # Raise an exception if there is an HTTP error
             weatherdic = json.loads(r.text)

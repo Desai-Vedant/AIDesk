@@ -1,8 +1,20 @@
-pyttsx3==2.90  # For text-to-speech functionality
+pyttsx3>=2.90  # For text-to-speech functionality
+SpeechRecognition>=3.8.1  # For speech recognition
+pyautogui>=0.9.54  # For taking screenshots
+requests>=2.31.0  # For making HTTP requests
+PyQt5-Qt5>=5.15.2  # For Qt5 support
+PyQt5-sip>=12.11.0  # For PyQt5 support
+PyQt5>=5.15.9  # For the graphical user interface
+pyperclip>=1.8.2  # For copying text to clipboard
+google-generativeai>=0.7.0  # For using Google Gemini API
+python-dotenv>=1.0.0  # For loading environment variables90  # For text-to-speech functionality
 SpeechRecognition==3.8.1  # For speech recognition
 pyautogui==0.9.54  # For taking screenshots
 requests==2.26.0  # For making HTTP requests
-openai==0.27.0  # For accessing the GPT-3.5 Turbo model
-pyqt5==5.15.4  # For the graphical user interface
+openai==1.3.5  # For accessing the GPT-3.5 Turbo model (updated version)
+PyQt5-Qt5>=5.15.2
+PyQt5-sip>=12.11.0
+PyQt5>=5.15.9  # For the graphical user interface
 pyperclip==1.8.2  # For copying text to the clipboard
-google-generativeai==0.5.2 # For using Google Gemini API
+google-genai>=0.7.0  # For using Google Gemini API
+python-dotenv==1.0.0  # For loading environment variables
