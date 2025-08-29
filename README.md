@@ -1,8 +1,8 @@
-# Desktop Assistant - AIDesk
+# AIDesk - Intelligent Desktop Assistant
 
 ![Desktop Assistant - AIDesk](AIDesk.png)
 
-**AIDesk** is a Python-based desktop assistant designed to make your computer tasks more convenient and efficient. It can perform various tasks through voice commands and text interactions.
+**AIDesk** is a modern Python-based desktop assistant powered by Google's Gemini AI. It combines voice commands, GUI interactions, and advanced AI capabilities to create a seamless desktop automation experience.
 
 ## Table of Contents
 
@@ -10,132 +10,210 @@
 - [Features](#features)
 - [Prerequisites](#prerequisites)
 - [Installation](#installation)
-- [Customization](#customization)
+- [Environment Setup](#environment-setup)
 - [Usage](#usage)
 - [Contributing](#contributing)
 
 ## Introduction
 
-AIDesk is a versatile desktop assistant that leverages various libraries and technologies to provide a range of functionalities, including:
+AIDesk is a sophisticated desktop assistant that integrates Google's cutting-edge Gemini AI with practical desktop automation features. It provides:
 
-- Voice-controlled commands
-- Web searches on Google and YouTube
-- Opening websites
-- Taking screenshots
-- Providing date and time information
-- Displaying temperature information for cities
-- Generating AI-based responses using OpenAI's GPT-3.5 Turbo model or Using Gemini API of Google
+- Intelligent AI-powered conversations using Google's Gemini
+- Voice-controlled interface with natural language processing
+- Modern PyQt5-based graphical interface
+- System automation capabilities
+- Real-time weather information
+- Web service integrations
 
-The assistant provides a graphical user interface (GUI) for users to interact with. The GUI offers a user-friendly experience.
+The assistant uses streaming responses for longer queries and provides context-aware interactions through its advanced AI model. Built with Python, it offers both voice and text-based interactions through an intuitive GUI.
 
 ## Features
 
-- Voice recognition and interaction
-- Web searches on Google and YouTube
-- Website opening
-- Screenshot capture
+### AI Capabilities
+- Advanced conversational AI powered by Google's Gemini
+- Contextual response generation with streaming support
+- Natural language understanding and processing
+- Intelligent task interpretation and execution
+
+### Voice Interface
+- Speech recognition for hands-free control
+- Text-to-speech response system
+- Clear voice feedback for commands
+- Multi-language voice support
+
+### System Functions
+- Screenshot capture with automatic file naming
 - Date and time information
-- Weather information for cities
-- AI-based responses using GPT-3.5 Turbo and Google's Gemini API
-- User-friendly GUI
+- System status monitoring
+- Clipboard management
+
+### Web Integration
+- Intelligent web searches (Google, YouTube)
+- Smart website navigation
+- YouTube Music integration
+- Weather information for any city
+
+### User Interface
+- Modern PyQt5-based GUI
+- Responsive design
+- Easy-to-use controls
+- Visual feedback for actions
 
 ## Prerequisites
 
-Before you can use AIDesk, ensure you have the following prerequisites installed on your system:
+Before installing AIDesk, ensure your system meets these requirements:
 
-- Python 3.6 or higher
-- Required Python libraries (specified in the `requirements.txt` file)
-- PyQt5 for the graphical user interface (install using `pip install PyQt5`)
-- OpenAI or Gemini API key for AI-based responses (replace the key in the code)
-- WeatherAPI API key for weather information (replace the key in the code)
+### System Requirements
+- Python 3.8 or higher
+- Windows 10/11 (primary support)
+- Minimum 4GB RAM
+- Microphone for voice commands
+- Internet connection
+
+### API Requirements
+- Google Gemini API key (for AI features)
+- WeatherAPI key (for weather information)
+
+### Python Packages
+- PyQt5 for GUI
+- google-generativeai for Gemini integration
+- pyttsx3 for text-to-speech
+- SpeechRecognition for voice commands
+- Additional dependencies in `requirements.txt`
 
 ## Installation
 
-1. Clone this repository to your local machine:
+### Quick Start
 
+1. Clone the repository:
     ```bash
     git clone https://github.com/Desai-Vedant/AIDesk.git
     ```
 
-2. Navigate to the project directory:
-
+2. Set up your Python environment:
     ```bash
     cd AIDesk
+    python -m venv venv
+    source venv/bin/activate  # On Windows: venv\Scripts\activate
     ```
 
-3. Install the required Python libraries from the `requirements.txt` file:
-
+3. Install dependencies:
     ```bash
     pip install -r requirements.txt
     ```
 
-## Customization
+## Environment Setup
 
-1. **OpenAI API Key**: Replace the OpenAI API key in the code with your own API key. Obtain your API key by signing up for OpenAI's GPT-3.5 Turbo model.
+AIDesk uses environment variables for secure configuration. Follow these steps:
 
-    - Locate the following line in `functions.py`:
+1. Copy the example environment file:
+    ```bash
+    cp .env.example .env
+    ```
 
-        ```python
-        openai.api_key = '--YOUR OPENAI API KEY--'
-        ```
+2. Configure your `.env` file with your API keys and preferences:
+    ```env
+    # API Keys
+    GEMINI_API_KEY=your_gemini_api_key_here
+    WEATHER_API_KEY=your_weather_api_key_here
 
-    - Replace `'--YOUR OPENAI API KEY--'` with your API key.
+    # User Configuration
+    OWNER_NAME=Your_Name
+    ASSISTANT_NAME=AIDesk
+    SCREENSHOT_PATH=C:/Users/YourUser/Pictures/Screenshots/
+    ```
 
-2. **Gemini API Key**: Replace the Gemini API key in the code with your own API key. Obtain your API key by signing up for Gemini API key.
+### API Keys Setup
 
-    - Locate the following line in `functions.py`:
+1. **Google Gemini API**
+   - Visit [Google AI Studio](https://makersuite.google.com/app/apikey)
+   - Create a new API key
+   - Add it to your `.env` file
 
-        ```python
-        genai.configure(api_key='--YOUR API KEY--')
-        ```
+2. **WeatherAPI**
+   - Sign up at [WeatherAPI.com](https://www.weatherapi.com/)
+   - Generate an API key
+   - Add it to your `.env` file
 
-    - Replace `'--YOUR API KEY--'` with your API key.
-      
+### Optional Configuration
 
-3. **Owner Name**: Customize the owner's name in the code to your preferred name. This is the name the assistant will use when interacting with you.
-
-    - Locate the following line in `functions.py`:
-
-        ```python
-        self.owner_name = "--YOUR NAME--"
-        ```
-
-    - Replace `"--YOUR NAME--"` with your preferred name.
-
-4. **Assistant Name**: Customize the assistant's name in the code to your preferred name. This is the name by which you'll address the assistant.
-
-    - Locate the following line in `functions.py`:
-
-        ```python
-        self.assistant_name = "AIDesk"
-        ```
-
-    - Replace `"AIDesk"` with your preferred assistant name.
-
-5. **WeatherAPI API Key**: If you plan to use the weather information feature, replace the WeatherAPI API key in the code with your own API key.
-
-    - Locate the following line in `functions.py`:
-
-        ```python
-        self.weather_api_key = "--YOUR WEATHER API KEY--"
-        ```
-
-    - Replace `'--YOUR WEATHER API KEY--'` with your own WeatherAPI API key.
+- **Screenshot Directory**: Customize the screenshot save location in `.env`
+- **Assistant Name**: Change the assistant's name for personalization
+- **Voice Settings**: Adjust voice parameters in `functions.py` if needed
 
 ## Usage
 
-- Run the assistant with the following command:
+### Starting the Assistant
 
+1. Activate your virtual environment:
+    ```bash
+    source venv/bin/activate  # On Windows: venv\Scripts\activate
+    ```
+
+2. Launch AIDesk:
     ```bash
     python main.py
     ```
 
-- The GUI interface will open, allowing you to interact with AIDesk through buttons and voice commands.
+### Voice Commands
+
+AIDesk responds to various voice commands:
+
+- **Web Searches**: 
+  - "Search [query] on Google"
+  - "Search [query] on YouTube"
+  - "Play [song] on YouTube Music"
+
+- **System Commands**:
+  - "Take a screenshot"
+  - "What's the time?"
+  - "What's today's date?"
+
+- **Weather Information**:
+  - "What's the temperature in [city]?"
+  - "How's the weather in [city]?"
+
+- **Website Navigation**:
+  - "Open [website]" (Supports major websites like Google, YouTube, GitHub, etc.)
+
+- **AI Conversations**:
+  - Ask any question for Gemini AI-powered responses
+  - Get detailed explanations and assistance
+
+### GUI Interface
+
+The modern interface provides:
+- Voice command button
+- Text input option
+- Response display area
+- Status indicators
+- Clipboard integration
 
 ## Contributing
 
-Contributions to AIDesk are welcome! If you have ideas for improvements or new features, please submit a pull request or open an issue on the GitHub repository.
+We welcome contributions to AIDesk! Here's how you can help:
+
+### Ways to Contribute
+- Report bugs and issues
+- Suggest new features
+- Improve documentation
+- Submit pull requests
+- Share usage examples
+
+### Development Setup
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Submit a pull request
+
+Please follow our coding standards and include appropriate tests.
 
 ---
 
-Enjoy the convenience of having your own desktop assistant! If you have any questions or encounter issues, feel free to reach out to the project maintainers.
+## Support and Community
+
+- **Issues**: Use GitHub Issues for bug reports and feature requests
+- **Discussions**: Join project discussions on GitHub
+- **Updates**: Star the repository to stay informed about updates
+
+Thank you for using AIDesk! For questions or support, please open an issue on GitHub.
